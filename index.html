@@ -1,0 +1,4569 @@
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+<title>Thống kê ứng dụng | Bài mở đầu</title>
+
+<!-- THỐNG KÊ ỨNG DỤNG | BÀI MỞ ĐẦU -->
+
+<style>
+
+/* =========================================================
+   1. LIGHT MODE
+========================================================= */
+:root{
+    --bg: #f5f7fb;
+    --bg-soft: #eef3f9;
+    --card: rgba(255,255,255,.95);
+    --card-solid: #ffffff;
+
+    --text: #162033;
+    --text-soft: #58657a;
+    --text-faint: #8290a5;
+
+    --primary: #2563eb;
+    --primary-dark: #1d4ed8;
+    --primary-2: #0ea5e9;
+    --primary-soft: #e8f1ff;
+
+    --cyan: #06b6d4;
+    --cyan-soft: #e8fbff;
+
+    --green: #10b981;
+    --green-soft: #e8faf4;
+
+    --orange: #f59e0b;
+    --orange-soft: #fff6dd;
+
+    --red: #ef4444;
+    --red-soft: #fff0f0;
+
+    --purple: #8b5cf6;
+    --purple-soft: #f3efff;
+
+    --border: rgba(100,116,139,.18);
+
+    --shadow:
+        0 18px 45px rgba(15,23,42,.08);
+
+    --radius: 24px;
+}
+
+
+/* =========================================================
+   2. DARK MODE
+========================================================= */
+body.dark{
+    --bg: #08111f;
+    --bg-soft: #0c1728;
+    --card: rgba(15,27,45,.95);
+    --card-solid: #0f1b2d;
+
+    --text: #edf5ff;
+    --text-soft: #aebed1;
+    --text-faint: #7f91a8;
+
+    --primary: #60a5fa;
+    --primary-dark: #3b82f6;
+    --primary-2: #22d3ee;
+    --primary-soft: rgba(37,99,235,.14);
+
+    --cyan-soft: rgba(6,182,212,.10);
+    --green-soft: rgba(16,185,129,.12);
+    --orange-soft: rgba(245,158,11,.12);
+    --red-soft: rgba(239,68,68,.12);
+    --purple-soft: rgba(139,92,246,.14);
+
+    --border: rgba(148,163,184,.17);
+
+    --shadow:
+        0 22px 55px rgba(0,0,0,.24);
+}
+
+
+/* =========================================================
+   3. RESET
+========================================================= */
+*{
+    box-sizing: border-box;
+}
+
+html{
+    scroll-behavior: smooth;
+}
+
+body{
+    margin: 0;
+
+    background:
+        radial-gradient(
+            circle at 15% 5%,
+            rgba(37,99,235,.08),
+            transparent 26%
+        ),
+        radial-gradient(
+            circle at 90% 18%,
+            rgba(6,182,212,.07),
+            transparent 22%
+        ),
+        var(--bg);
+
+    color: var(--text);
+
+    font-family:
+        Inter,
+        -apple-system,
+        BlinkMacSystemFont,
+        "Segoe UI",
+        Roboto,
+        Helvetica,
+        Arial,
+        sans-serif;
+
+    line-height: 1.72;
+
+    transition:
+        background .3s ease,
+        color .3s ease;
+}
+
+button{
+    font: inherit;
+}
+
+strong{
+    color: var(--text);
+}
+
+a{
+    color: inherit;
+}
+
+
+/* =========================================================
+   4. PROGRESS BAR
+========================================================= */
+#progressBar{
+    position: fixed;
+    z-index: 9999;
+
+    top: 0;
+    left: 0;
+
+    height: 4px;
+    width: 0;
+
+    background:
+        linear-gradient(
+            90deg,
+            var(--primary),
+            var(--cyan)
+        );
+}
+
+
+/* =========================================================
+   5. TOP BAR
+========================================================= */
+.topbar{
+    position: sticky;
+    top: 0;
+    z-index: 1000;
+
+    backdrop-filter: blur(18px);
+
+    background:
+        color-mix(
+            in srgb,
+            var(--bg) 82%,
+            transparent
+        );
+
+    border-bottom:
+        1px solid var(--border);
+}
+
+.topbar-inner{
+    max-width: 1180px;
+    margin: auto;
+
+    min-height: 68px;
+
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+
+    padding: 10px 22px;
+}
+
+.brand{
+    display: flex;
+    align-items: center;
+    gap: 12px;
+
+    font-weight: 800;
+}
+
+.brand-icon{
+    width: 42px;
+    height: 42px;
+
+    border-radius: 14px;
+
+    display: grid;
+    place-items: center;
+
+    color: white;
+
+    background:
+        linear-gradient(
+            135deg,
+            var(--primary),
+            var(--cyan)
+        );
+
+    box-shadow:
+        0 10px 25px rgba(37,99,235,.25);
+}
+
+.brand small{
+    display: block;
+    color: var(--text-soft);
+    font-weight: 500;
+    font-size: 12px;
+}
+
+.actions{
+    display: flex;
+    align-items: center;
+    gap: 10px;
+}
+
+.theme-btn{
+    border:
+        1px solid var(--border);
+
+    background: var(--card);
+    color: var(--text);
+
+    border-radius: 14px;
+
+    padding: 9px 14px;
+
+    cursor: pointer;
+
+    transition: .2s;
+}
+
+.theme-btn:hover{
+    transform: translateY(-1px);
+}
+
+
+/* =========================================================
+   6. LAYOUT
+========================================================= */
+.container{
+    max-width: 1180px;
+    margin: auto;
+
+    padding:
+        36px 22px 80px;
+}
+
+section{
+    scroll-margin-top: 95px;
+    margin: 78px 0;
+}
+
+
+/* =========================================================
+   7. HERO
+========================================================= */
+.hero{
+    min-height: 76vh;
+
+    display: grid;
+
+    grid-template-columns:
+        minmax(0,1.1fr)
+        minmax(320px,.9fr);
+
+    align-items: center;
+
+    gap: 46px;
+
+    padding:
+        65px 0 40px;
+}
+
+.eyebrow{
+    display: inline-flex;
+    align-items: center;
+    gap: 8px;
+
+    padding: 7px 13px;
+
+    border-radius: 999px;
+
+    background: var(--primary-soft);
+    color: var(--primary);
+
+    font-size: 13px;
+    font-weight: 800;
+
+    letter-spacing: .05em;
+    text-transform: uppercase;
+}
+
+.hero h1{
+    margin:
+        20px 0 16px;
+
+    font-size:
+        clamp(40px,6vw,76px);
+
+    line-height: 1.04;
+    letter-spacing: -.045em;
+}
+
+.gradient-text{
+    background:
+        linear-gradient(
+            90deg,
+            var(--primary),
+            var(--cyan)
+        );
+
+    background-clip: text;
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+    color: transparent;
+}
+
+.hero-desc{
+    max-width: 720px;
+
+    color: var(--text-soft);
+
+    font-size:
+        clamp(17px,2vw,21px);
+}
+
+.teacher{
+    margin-top: 25px;
+
+    display: flex;
+    align-items: center;
+    gap: 12px;
+
+    color: var(--text-soft);
+}
+
+.teacher-avatar{
+    width: 48px;
+    height: 48px;
+
+    display: grid;
+    place-items: center;
+
+    border-radius: 50%;
+
+    background:
+        linear-gradient(
+            135deg,
+            var(--primary),
+            var(--purple)
+        );
+
+    color: white;
+    font-weight: 900;
+}
+
+
+/* =========================================================
+   8. HERO VISUAL
+========================================================= */
+.hero-visual{
+    position: relative;
+
+    min-height: 430px;
+
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.visual-card{
+    width: 100%;
+
+    padding: 30px;
+
+    border-radius: 32px;
+
+    background: var(--card);
+
+    border:
+        1px solid var(--border);
+
+    box-shadow: var(--shadow);
+
+    position: relative;
+    overflow: hidden;
+}
+
+.visual-card::before{
+    content: "";
+
+    position: absolute;
+
+    width: 190px;
+    height: 190px;
+
+    border-radius: 50%;
+
+    background:
+        rgba(37,99,235,.12);
+
+    top: -70px;
+    right: -50px;
+}
+
+.visual-title{
+    color: var(--text-soft);
+    font-size: 14px;
+    font-weight: 700;
+}
+
+.big-number{
+    font-size:
+        clamp(70px,9vw,118px);
+
+    line-height: 1;
+
+    margin: 15px 0;
+
+    font-weight: 900;
+    letter-spacing: -.06em;
+
+    color: var(--primary);
+}
+
+.question-mark{
+    position: absolute;
+
+    right: 30px;
+    bottom: 10px;
+
+    font-size: 110px;
+
+    color: var(--primary);
+
+    opacity: .08;
+
+    font-weight: 900;
+}
+
+
+/* =========================================================
+   9. NAVIGATION
+========================================================= */
+.lesson-nav{
+    display: flex;
+    flex-wrap: wrap;
+
+    gap: 9px;
+
+    padding: 18px;
+
+    border:
+        1px solid var(--border);
+
+    border-radius: 20px;
+
+    background: var(--card);
+
+    box-shadow: var(--shadow);
+}
+
+.lesson-nav a{
+    text-decoration: none;
+    color: var(--text-soft);
+
+    padding: 8px 13px;
+
+    border-radius: 999px;
+
+    font-size: 14px;
+    font-weight: 650;
+
+    transition: .2s;
+}
+
+.lesson-nav a:hover{
+    color: var(--primary);
+    background: var(--primary-soft);
+}
+
+
+/* =========================================================
+   10. SECTION HEADER
+========================================================= */
+.section-label{
+    color: var(--primary);
+
+    font-weight: 900;
+    font-size: 13px;
+
+    letter-spacing: .08em;
+    text-transform: uppercase;
+}
+
+.section-title{
+    margin:
+        7px 0 12px;
+
+    font-size:
+        clamp(30px,4vw,48px);
+
+    line-height: 1.15;
+    letter-spacing: -.025em;
+}
+
+.section-intro{
+    max-width: 880px;
+
+    color: var(--text-soft);
+
+    font-size: 18px;
+}
+
+
+/* =========================================================
+   11. GENERAL CARD
+========================================================= */
+.card{
+    background: var(--card);
+
+    border:
+        1px solid var(--border);
+
+    border-radius: var(--radius);
+
+    box-shadow: var(--shadow);
+
+    padding: 28px;
+}
+
+
+/* =========================================================
+   12. STORY BANNER
+========================================================= */
+.story-banner{
+    position: relative;
+    overflow: hidden;
+
+    margin-top: 30px;
+
+    padding:
+        34px;
+
+    border-radius: 28px;
+
+    background:
+        linear-gradient(
+            135deg,
+            #173b78,
+            #0f6a85
+        );
+
+    color: white;
+
+    box-shadow:
+        0 25px 60px rgba(15,23,42,.22);
+}
+
+.story-banner::after{
+    content: "?";
+
+    position: absolute;
+
+    right: 25px;
+    bottom: -65px;
+
+    font-size: 220px;
+    line-height: 1;
+
+    font-weight: 900;
+
+    opacity: .08;
+}
+
+.story-banner .story-label{
+    display: inline-flex;
+
+    padding:
+        6px 11px;
+
+    border-radius: 999px;
+
+    background:
+        rgba(255,255,255,.14);
+
+    color: #ffffff;
+
+    font-size: 12px;
+    font-weight: 900;
+
+    letter-spacing: .08em;
+    text-transform: uppercase;
+}
+
+.story-banner h3{
+    position: relative;
+    z-index: 2;
+
+    margin:
+        15px 0 10px;
+
+    max-width: 820px;
+
+    color: white;
+
+    font-size:
+        clamp(27px,4vw,45px);
+
+    line-height: 1.2;
+}
+
+.story-banner p{
+    position: relative;
+    z-index: 2;
+
+    max-width: 900px;
+
+    color:
+        rgba(255,255,255,.86);
+
+    font-size: 18px;
+}
+
+
+/* =========================================================
+   13. TIMELINE
+========================================================= */
+.timeline{
+    position: relative;
+
+    margin-top: 34px;
+
+    padding-left: 30px;
+}
+
+.timeline::before{
+    content: "";
+
+    position: absolute;
+
+    top: 8px;
+    bottom: 8px;
+    left: 10px;
+
+    width: 3px;
+
+    border-radius: 999px;
+
+    background:
+        linear-gradient(
+            var(--primary),
+            var(--cyan)
+        );
+}
+
+.timeline-item{
+    position: relative;
+
+    margin-bottom: 24px;
+
+    padding:
+        24px 25px;
+
+    border-radius: 22px;
+
+    border:
+        1px solid var(--border);
+
+    background: var(--card);
+
+    box-shadow: var(--shadow);
+}
+
+.timeline-item::before{
+    content: "";
+
+    position: absolute;
+
+    left: -28px;
+    top: 29px;
+
+    width: 15px;
+    height: 15px;
+
+    border-radius: 50%;
+
+    background: var(--primary);
+
+    border:
+        4px solid var(--bg);
+}
+
+.timeline-step{
+    color: var(--primary);
+
+    font-size: 12px;
+    font-weight: 900;
+
+    letter-spacing: .07em;
+    text-transform: uppercase;
+}
+
+.timeline-item h3{
+    margin:
+        6px 0 7px;
+}
+
+.timeline-item p{
+    margin-bottom: 0;
+    color: var(--text-soft);
+}
+
+
+/* =========================================================
+   14. BIG QUESTION
+========================================================= */
+.big-question{
+    margin-top: 28px;
+
+    padding:
+        40px 30px;
+
+    text-align: center;
+
+    border-radius: 28px;
+
+    background:
+        linear-gradient(
+            135deg,
+            var(--primary-soft),
+            var(--purple-soft)
+        );
+
+    border:
+        1px solid var(--border);
+}
+
+.big-question .icon{
+    font-size: 42px;
+}
+
+.big-question h3{
+    margin:
+        10px 0;
+
+    font-size:
+        clamp(25px,4vw,40px);
+}
+
+.big-question p{
+    color: var(--text-soft);
+}
+
+
+/* =========================================================
+   15. DATA CARDS
+========================================================= */
+.data-grid{
+    display: grid;
+
+    grid-template-columns:
+        repeat(4,1fr);
+
+    gap: 16px;
+
+    margin-top: 28px;
+}
+
+.data-card{
+    padding: 24px;
+
+    min-height: 190px;
+
+    border-radius: 22px;
+
+    background: var(--card);
+
+    border:
+        1px solid var(--border);
+
+    box-shadow: var(--shadow);
+
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
+
+    transition: .25s;
+}
+
+.data-card:hover{
+    transform: translateY(-5px);
+}
+
+.data-icon{
+    font-size: 25px;
+}
+
+.data-value{
+    font-size:
+        clamp(40px,5vw,62px);
+
+    font-weight: 900;
+
+    line-height: 1;
+    letter-spacing: -.04em;
+}
+
+.data-card:nth-child(1) .data-value{
+    color: var(--primary);
+}
+
+.data-card:nth-child(2) .data-value{
+    color: var(--green);
+}
+
+.data-card:nth-child(3) .data-value{
+    color: var(--orange);
+}
+
+.data-card:nth-child(4) .data-value{
+    color: var(--purple);
+}
+
+.data-label{
+    color: var(--text-soft);
+    font-size: 14px;
+}
+
+
+/* =========================================================
+   16. COMPARISON
+========================================================= */
+.compare{
+    margin-top: 28px;
+
+    display: grid;
+
+    grid-template-columns:
+        1fr 70px 1fr;
+
+    gap: 18px;
+
+    align-items: center;
+}
+
+.compare-card{
+    padding: 30px;
+
+    border-radius: 24px;
+
+    border:
+        1px solid var(--border);
+
+    background: var(--card);
+
+    text-align: center;
+}
+
+.compare-number{
+    font-size:
+        clamp(50px,7vw,82px);
+
+    font-weight: 900;
+
+    line-height: 1;
+}
+
+.compare-left .compare-number{
+    color: var(--text-soft);
+}
+
+.compare-right .compare-number{
+    color: var(--primary);
+}
+
+.vs{
+    width: 60px;
+    height: 60px;
+
+    display: grid;
+    place-items: center;
+
+    border-radius: 50%;
+
+    background:
+        var(--primary-soft);
+
+    color: var(--primary);
+
+    font-weight: 900;
+}
+
+
+/* =========================================================
+   17. THINK BOX
+========================================================= */
+.think-box{
+    margin-top: 28px;
+
+    padding: 28px;
+
+    border-left:
+        5px solid var(--orange);
+
+    border-radius:
+        0 22px 22px 0;
+
+    background:
+        var(--orange-soft);
+}
+
+.think-box strong{
+    color: var(--orange);
+}
+
+
+/* =========================================================
+   18. WARNING BOX
+========================================================= */
+.warning-box{
+    margin-top: 28px;
+
+    padding: 27px;
+
+    border-radius: 22px;
+
+    background:
+        var(--red-soft);
+
+    border:
+        1px solid color-mix(
+            in srgb,
+            var(--red) 25%,
+            transparent
+        );
+}
+
+.warning-box h3{
+    margin-top: 0;
+    color: var(--red);
+}
+
+.warning-box p:last-child{
+    margin-bottom: 0;
+}
+
+
+/* =========================================================
+   19. DEFINITION BOX
+========================================================= */
+.definition-box{
+    position: relative;
+    overflow: hidden;
+
+    margin-top: 30px;
+
+    padding:
+        35px 34px;
+
+    border-radius: 28px;
+
+    background:
+        linear-gradient(
+            135deg,
+            var(--primary-soft),
+            var(--cyan-soft)
+        );
+
+    border:
+        1px solid var(--border);
+}
+
+.definition-box::after{
+    content: "Σ";
+
+    position: absolute;
+
+    right: 25px;
+    bottom: -52px;
+
+    font-size: 180px;
+    line-height: 1;
+
+    font-weight: 900;
+
+    color: var(--primary);
+
+    opacity: .055;
+}
+
+.definition-tag{
+    display: inline-block;
+
+    padding:
+        5px 11px;
+
+    border-radius: 999px;
+
+    background: var(--primary);
+
+    color: white;
+
+    font-size: 12px;
+    font-weight: 900;
+
+    text-transform: uppercase;
+    letter-spacing: .07em;
+}
+
+.definition-box h3{
+    margin:
+        15px 0 10px;
+
+    font-size:
+        clamp(26px,3vw,38px);
+}
+
+.definition-box p{
+    position: relative;
+    z-index: 2;
+
+    max-width: 880px;
+
+    font-size: 18px;
+}
+
+
+/* =========================================================
+   20. PROCESS
+========================================================= */
+.stats-process{
+    display: grid;
+
+    grid-template-columns:
+        repeat(5,1fr);
+
+    gap: 12px;
+
+    margin-top: 28px;
+}
+
+.process-item{
+    min-height: 160px;
+
+    padding:
+        23px 18px;
+
+    text-align: center;
+
+    border:
+        1px solid var(--border);
+
+    border-radius: 20px;
+
+    background: var(--card);
+
+    transition: .22s;
+}
+
+.process-item:hover{
+    transform: translateY(-4px);
+}
+
+.process-icon{
+    font-size: 31px;
+    margin-bottom: 8px;
+}
+
+.process-item h4{
+    margin:
+        3px 0 5px;
+}
+
+.process-item p{
+    color: var(--text-soft);
+    font-size: 14px;
+}
+
+
+/* =========================================================
+   21. CONCEPT CARDS
+========================================================= */
+.concept-grid{
+    display: grid;
+
+    grid-template-columns:
+        repeat(3,1fr);
+
+    gap: 16px;
+
+    margin-top: 30px;
+}
+
+.concept-card{
+    position: relative;
+
+    min-height: 240px;
+
+    padding: 27px;
+
+    border:
+        1px solid var(--border);
+
+    border-radius: 24px;
+
+    background: var(--card);
+
+    overflow: hidden;
+
+    transition: .25s;
+}
+
+.concept-card:hover{
+    transform: translateY(-4px);
+}
+
+.concept-number{
+    position: absolute;
+
+    right: 18px;
+    top: 10px;
+
+    font-size: 55px;
+    line-height: 1;
+
+    font-weight: 900;
+
+    color: var(--primary);
+
+    opacity: .07;
+}
+
+.concept-icon{
+    width: 48px;
+    height: 48px;
+
+    display: grid;
+    place-items: center;
+
+    border-radius: 15px;
+
+    background:
+        var(--primary-soft);
+
+    font-size: 23px;
+}
+
+.concept-card h3{
+    margin:
+        18px 0 7px;
+}
+
+.concept-card p{
+    color: var(--text-soft);
+}
+
+.concept-example{
+    margin-top: 15px;
+
+    padding: 12px 14px;
+
+    border-radius: 14px;
+
+    background: var(--bg-soft);
+
+    color: var(--text-soft);
+
+    font-size: 14px;
+}
+
+
+/* =========================================================
+   22. SAMPLE VISUAL
+========================================================= */
+.population-wrap{
+    display: grid;
+
+    grid-template-columns:
+        1fr 90px 1fr;
+
+    gap: 18px;
+
+    align-items: center;
+
+    margin-top: 30px;
+}
+
+.population-card{
+    padding: 28px;
+
+    border:
+        1px solid var(--border);
+
+    border-radius: 24px;
+
+    background: var(--card);
+}
+
+.dot-cloud{
+    display: flex;
+    flex-wrap: wrap;
+
+    gap: 8px;
+
+    margin: 20px 0;
+}
+
+.person-dot{
+    width: 17px;
+    height: 17px;
+
+    border-radius: 50%;
+
+    background:
+        var(--text-faint);
+
+    opacity: .55;
+}
+
+.person-dot.sample{
+    background: var(--primary);
+    opacity: 1;
+}
+
+.arrow-circle{
+    width: 64px;
+    height: 64px;
+
+    margin: auto;
+
+    border-radius: 50%;
+
+    display: grid;
+    place-items: center;
+
+    color: white;
+
+    background:
+        linear-gradient(
+            135deg,
+            var(--primary),
+            var(--cyan)
+        );
+
+    font-size: 27px;
+    font-weight: 900;
+}
+
+
+/* =========================================================
+   23. TWO BRANCHES
+========================================================= */
+.branch-grid{
+    display: grid;
+
+    grid-template-columns:
+        repeat(2,1fr);
+
+    gap: 18px;
+
+    margin-top: 30px;
+}
+
+.branch-card{
+    padding: 30px;
+
+    border-radius: 26px;
+
+    border:
+        1px solid var(--border);
+}
+
+.branch-card.descriptive{
+    background:
+        var(--primary-soft);
+}
+
+.branch-card.inferential{
+    background:
+        var(--green-soft);
+}
+
+.branch-icon{
+    font-size: 35px;
+}
+
+.branch-card h3{
+    font-size: 25px;
+
+    margin:
+        8px 0 10px;
+}
+
+.branch-card p{
+    color:
+        var(--text-soft);
+}
+
+
+/* =========================================================
+   24. ROLE / APPLICATIONS
+========================================================= */
+.role-grid{
+    display: grid;
+
+    grid-template-columns:
+        repeat(4,1fr);
+
+    gap: 16px;
+
+    margin-top: 28px;
+}
+
+.role-card{
+    padding: 25px 22px;
+
+    min-height: 210px;
+
+    border-radius: 22px;
+
+    border:
+        1px solid var(--border);
+
+    background: var(--card);
+}
+
+.role-icon{
+    font-size: 30px;
+}
+
+.role-card h3{
+    margin:
+        10px 0 7px;
+}
+
+.role-card p{
+    color: var(--text-soft);
+    font-size: 15px;
+}
+
+
+/* =========================================================
+   25. VOTE
+========================================================= */
+.vote-grid{
+    display: grid;
+
+    grid-template-columns:
+        repeat(3,1fr);
+
+    gap: 14px;
+
+    margin-top: 22px;
+}
+
+.vote-btn{
+    min-height: 125px;
+
+    border:
+        1px solid var(--border);
+
+    border-radius: 20px;
+
+    background: var(--card);
+
+    color: var(--text);
+
+    cursor: pointer;
+
+    padding: 20px;
+
+    font-weight: 700;
+
+    transition: .2s;
+}
+
+.vote-btn:hover{
+    transform:
+        translateY(-3px);
+
+    border-color:
+        var(--primary);
+}
+
+.vote-btn.selected{
+    color: var(--primary);
+
+    background:
+        var(--primary-soft);
+
+    border-color:
+        var(--primary);
+}
+
+.feedback{
+    display: none;
+
+    margin-top: 18px;
+
+    padding: 20px;
+
+    border-radius: 18px;
+
+    background:
+        var(--green-soft);
+
+    color: var(--text);
+}
+
+.feedback.show{
+    display: block;
+}
+
+
+/* =========================================================
+   26. FLOW
+========================================================= */
+.flow{
+    display: grid;
+
+    grid-template-columns:
+        repeat(5,1fr);
+
+    gap: 12px;
+
+    margin-top: 30px;
+}
+
+.flow-item{
+    min-height: 155px;
+
+    padding: 22px 18px;
+
+    border-radius: 20px;
+
+    background: var(--card);
+
+    border:
+        1px solid var(--border);
+
+    text-align: center;
+}
+
+.flow-number{
+    width: 36px;
+    height: 36px;
+
+    margin:
+        0 auto 12px;
+
+    border-radius: 50%;
+
+    display: grid;
+    place-items: center;
+
+    color: white;
+
+    background:
+        var(--primary);
+
+    font-weight: 900;
+}
+
+.flow-item h4{
+    margin: 5px 0;
+}
+
+.flow-item p{
+    color:
+        var(--text-soft);
+
+    font-size: 14px;
+}
+
+
+/* =========================================================
+   27. MESSAGE
+========================================================= */
+.message{
+    padding: 40px;
+
+    border-radius: 28px;
+
+    background:
+        linear-gradient(
+            135deg,
+            #173b78,
+            #0e7490
+        );
+
+    color: white;
+
+    box-shadow:
+        0 25px 60px rgba(15,23,42,.2);
+}
+
+.message h3{
+    color: white;
+
+    margin-top: 0;
+
+    font-size:
+        clamp(28px,4vw,44px);
+}
+
+.message p{
+    color:
+        rgba(255,255,255,.86);
+
+    font-size: 18px;
+}
+
+.message strong{
+    color: #fde68a;
+}
+
+
+/* =========================================================
+   28. QUESTIONS
+========================================================= */
+.questions{
+    display: grid;
+
+    grid-template-columns:
+        repeat(2,1fr);
+
+    gap: 16px;
+
+    margin-top: 28px;
+}
+
+.question-card{
+    padding: 25px;
+
+    border-radius: 22px;
+
+    border:
+        1px solid var(--border);
+
+    background: var(--card);
+}
+
+.question-no{
+    color: var(--primary);
+
+    font-size: 13px;
+    font-weight: 900;
+
+    text-transform: uppercase;
+    letter-spacing: .07em;
+}
+
+
+/* =========================================================
+   29. MINI QUIZ
+========================================================= */
+.mini-quiz{
+    margin-top: 30px;
+
+    padding: 28px;
+
+    border-radius: 26px;
+
+    background: var(--card);
+
+    border:
+        1px solid var(--border);
+}
+
+.quiz-options{
+    display: grid;
+
+    gap: 10px;
+
+    margin-top: 18px;
+}
+
+.quiz-option{
+    padding: 14px 17px;
+
+    text-align: left;
+
+    border:
+        1px solid var(--border);
+
+    border-radius: 15px;
+
+    background: var(--bg-soft);
+
+    color: var(--text);
+
+    cursor: pointer;
+
+    transition: .2s;
+}
+
+.quiz-option:hover{
+    border-color:
+        var(--primary);
+}
+
+.quiz-option.correct{
+    border-color:
+        var(--green);
+
+    background:
+        var(--green-soft);
+}
+
+.quiz-option.wrong{
+    border-color:
+        var(--red);
+
+    background:
+        var(--red-soft);
+}
+
+.quiz-feedback{
+    margin-top: 15px;
+
+    color:
+        var(--text-soft);
+}
+
+
+/* =========================================================
+   30. NEXT LESSON
+========================================================= */
+.next-lesson{
+    display: grid;
+
+    grid-template-columns:
+        80px 1fr;
+
+    gap: 20px;
+
+    align-items: center;
+
+    padding: 30px;
+
+    border-radius: 26px;
+
+    background:
+        var(--purple-soft);
+
+    border:
+        1px solid var(--border);
+}
+
+.next-icon{
+    width: 70px;
+    height: 70px;
+
+    display: grid;
+    place-items: center;
+
+    border-radius: 20px;
+
+    background:
+        var(--purple);
+
+    color: white;
+
+    font-size: 30px;
+}
+
+
+/* =========================================================
+   31. FOOTER
+========================================================= */
+footer{
+    margin-top: 90px;
+
+    padding:
+        40px 20px;
+
+    text-align: center;
+
+    border-top:
+        1px solid var(--border);
+
+    color:
+        var(--text-soft);
+}
+
+
+/* =========================================================
+   32. TOP BUTTON
+========================================================= */
+#topBtn{
+    position: fixed;
+
+    right: 22px;
+    bottom: 22px;
+
+    width: 48px;
+    height: 48px;
+
+    border: none;
+
+    border-radius: 16px;
+
+    background:
+        var(--primary);
+
+    color: white;
+
+    cursor: pointer;
+
+    box-shadow:
+        0 10px 30px rgba(37,99,235,.25);
+
+    opacity: 0;
+
+    pointer-events: none;
+
+    transition: .25s;
+}
+
+#topBtn.show{
+    opacity: 1;
+    pointer-events: auto;
+}
+
+
+/* =========================================================
+   33. RESPONSIVE
+========================================================= */
+@media(max-width: 950px){
+
+    .hero{
+        grid-template-columns: 1fr;
+        min-height: auto;
+        padding-top: 45px;
+    }
+
+    .hero-visual{
+        min-height: auto;
+    }
+
+    .data-grid,
+    .role-grid{
+        grid-template-columns:
+            repeat(2,1fr);
+    }
+
+    .concept-grid{
+        grid-template-columns:
+            repeat(2,1fr);
+    }
+
+    .stats-process,
+    .flow{
+        grid-template-columns:
+            repeat(2,1fr);
+    }
+
+    .compare,
+    .population-wrap{
+        grid-template-columns: 1fr;
+    }
+
+    .vs,
+    .arrow-circle{
+        margin: auto;
+    }
+}
+
+@media(max-width: 650px){
+
+    .container{
+        padding-left: 16px;
+        padding-right: 16px;
+    }
+
+    .brand small{
+        display: none;
+    }
+
+    .theme-text{
+        display: none;
+    }
+
+    .data-grid,
+    .role-grid,
+    .concept-grid,
+    .vote-grid,
+    .questions,
+    .flow,
+    .stats-process,
+    .branch-grid{
+        grid-template-columns: 1fr;
+    }
+
+    .next-lesson{
+        grid-template-columns: 1fr;
+    }
+
+    .hero h1{
+        font-size: 43px;
+    }
+
+    section{
+        margin:
+            58px 0;
+    }
+
+    .story-banner{
+        padding: 27px 22px;
+    }
+}
+
+</style>
+</head>
+
+<body>
+
+<div id="progressBar"></div>
+
+
+<!-- =========================================================
+     TOP BAR
+========================================================= -->
+<header class="topbar">
+
+    <div class="topbar-inner">
+
+        <div class="brand">
+
+            <div class="brand-icon">
+                Σ
+            </div>
+
+            <div>
+                THỐNG KÊ ỨNG DỤNG
+                <small>Giảng viên: Nguyễn Đức Ánh</small>
+            </div>
+
+        </div>
+
+        <div class="actions">
+
+            <button
+                class="theme-btn"
+                id="themeBtn"
+                onclick="toggleTheme()"
+                aria-label="Chuyển chế độ sáng tối"
+            >
+                <span id="themeIcon">🌙</span>
+
+                <span
+                    class="theme-text"
+                    id="themeText"
+                >
+                    Nền tối
+                </span>
+            </button>
+
+        </div>
+
+    </div>
+
+</header>
+
+
+<main class="container">
+
+
+<!-- =========================================================
+     HERO
+========================================================= -->
+<section class="hero" id="home">
+
+    <div>
+
+        <span class="eyebrow">
+            ● Bài mở đầu
+        </span>
+
+        <h1>
+            Những con số
+            <span class="gradient-text">
+                biết nói?
+            </span>
+        </h1>
+
+        <p class="hero-desc">
+            Mỗi ngày chúng ta gặp vô số dữ liệu:
+            điểm thi, doanh thu, lượt xem,
+            kết quả khảo sát, chất lượng sản phẩm,
+            số bệnh nhân, tỷ lệ thất nghiệp...
+        </p>
+
+        <p class="hero-desc">
+            Nhưng nhìn thấy những con số
+            chưa có nghĩa là chúng ta đã
+            <strong>hiểu dữ liệu</strong>.
+        </p>
+
+        <div class="teacher">
+
+            <div class="teacher-avatar">
+                NĐA
+            </div>
+
+            <div>
+                <strong>Nguyễn Đức Ánh</strong><br>
+                Giảng viên
+            </div>
+
+        </div>
+
+    </div>
+
+
+    <div class="hero-visual">
+
+        <div class="visual-card">
+
+            <div class="visual-title">
+                MỘT CON SỐ XUẤT HIỆN TRƯỚC MẮT BẠN
+            </div>
+
+            <div class="big-number">
+                9,58
+            </div>
+
+            <p>
+                Cao hay thấp?<br>
+                Bình thường hay bất thường?<br>
+                Con số này đang kể câu chuyện gì?
+            </p>
+
+            <div class="question-mark">
+                ?
+            </div>
+
+        </div>
+
+    </div>
+
+</section>
+
+
+<!-- =========================================================
+     NAVIGATION
+========================================================= -->
+<nav class="lesson-nav">
+
+    <a href="#start">
+        01. Khởi động
+    </a>
+
+    <a href="#tuyenquang">
+        02. Câu chuyện Tuyên Quang
+    </a>
+
+    <a href="#data">
+        03. Nhìn vào dữ liệu
+    </a>
+
+    <a href="#what-is-statistics">
+        04. Thống kê là gì?
+    </a>
+
+    <a href="#concepts">
+        05. Khái niệm cơ bản
+    </a>
+
+    <a href="#branches">
+        06. Hai hướng thống kê
+    </a>
+
+    <a href="#meaning">
+        07. Ý nghĩa
+    </a>
+
+    <a href="#thinking">
+        08. Tư duy thống kê
+    </a>
+
+    <a href="#conclusion">
+        09. Chốt bài
+    </a>
+
+</nav>
+
+
+<!-- =========================================================
+     01. KHỞI ĐỘNG
+========================================================= -->
+<section id="start">
+
+    <div class="section-label">
+        01 — Khởi động
+    </div>
+
+    <h2 class="section-title">
+        Một con số có thể nói lên điều gì?
+    </h2>
+
+    <p class="section-intro">
+        Trong những phút đầu tiên,
+        chúng ta chưa cần học công thức.
+        Hãy thử bắt đầu giống như một người
+        đang thực sự làm việc với dữ liệu:
+        quan sát và đặt câu hỏi.
+    </p>
+
+
+    <div class="big-question">
+
+        <div class="icon">
+            🤔
+        </div>
+
+        <h3>
+            Điểm Toán 9,58.
+            Bạn thấy thế nào?
+        </h3>
+
+        <p>
+            Đây là một kết quả rất cao.
+            Nhưng chỉ với một con số này,
+            chúng ta có thể kết luận được điều gì?
+        </p>
+
+    </div>
+
+
+    <div class="think-box">
+
+        <strong>Câu hỏi cho lớp học:</strong>
+
+        <p>
+            Nếu thầy chỉ nói:
+            “Một nhóm học sinh có mức điểm Toán 9,58”,
+            các em muốn biết thêm thông tin gì
+            trước khi đưa ra nhận xét?
+        </p>
+
+    </div>
+
+</section>
+
+
+<!-- =========================================================
+     02. CÂU CHUYỆN TUYÊN QUANG
+========================================================= -->
+<section id="tuyenquang">
+
+    <div class="section-label">
+        02 — Một câu chuyện thật
+    </div>
+
+    <h2 class="section-title">
+        Khi những con số gợi ra câu hỏi
+    </h2>
+
+    <p class="section-intro">
+        Kỳ thi tốt nghiệp THPT năm 2026
+        được chọn làm một tình huống thực tế
+        để bắt đầu môn Thống kê ứng dụng.
+    </p>
+
+
+    <div class="story-banner">
+
+        <span class="story-label">
+            Tình huống mở đầu
+        </span>
+
+        <h3>
+            Điều gì đã khiến kết quả môn Toán
+            tại một điểm thi ở Tuyên Quang
+            trở thành câu chuyện được đặc biệt quan tâm?
+        </h3>
+
+        <p>
+            Không phải chỉ vì có học sinh đạt điểm cao.
+            Điều làm người ta chú ý là
+            <strong style="color:#fde68a;">
+                một cụm rất nhiều kết quả cực cao
+                xuất hiện cùng một nơi
+            </strong>
+            và khác biệt rõ rệt so với bối cảnh rộng hơn.
+        </p>
+
+    </div>
+
+
+    <div class="timeline">
+
+
+        <div class="timeline-item">
+
+            <div class="timeline-step">
+                Bước 1
+            </div>
+
+            <h3>
+                Điểm thi được công bố
+            </h3>
+
+            <p>
+                Tại một điểm thi ở Tuyên Quang,
+                có 328 thí sinh dự thi môn Toán.
+                Khi kết quả được công bố,
+                những con số xuất hiện khiến nhiều người
+                ngay lập tức chú ý.
+            </p>
+
+        </div>
+
+
+        <div class="timeline-item">
+
+            <div class="timeline-step">
+                Bước 2
+            </div>
+
+            <h3>
+                Một cụm điểm rất cao xuất hiện
+            </h3>
+
+            <p>
+                Trong 328 thí sinh,
+                có 299 em đạt từ 9 điểm trở lên
+                và có tới 147 bài thi đạt điểm 10.
+                Mức điểm trung bình được công bố
+                của nhóm này là khoảng 9,58.
+            </p>
+
+        </div>
+
+
+        <div class="timeline-item">
+
+            <div class="timeline-step">
+                Bước 3
+            </div>
+
+            <h3>
+                Đặt dữ liệu vào bối cảnh
+            </h3>
+
+            <p>
+                Khi đặt kết quả của nhóm này
+                bên cạnh kết quả môn Toán của toàn tỉnh,
+                sự khác biệt trở nên đặc biệt đáng chú ý.
+                Đây chính là lúc dữ liệu bắt đầu
+                tạo ra những câu hỏi.
+            </p>
+
+        </div>
+
+
+        <div class="timeline-item">
+
+            <div class="timeline-step">
+                Bước 4
+            </div>
+
+            <h3>
+                Từ quan sát dữ liệu đến câu hỏi tiếp theo
+            </h3>
+
+            <p>
+                Khi một nhóm số liệu khác biệt rõ so với bối cảnh chung,
+                điều hợp lý trước tiên là đặt thêm câu hỏi:
+                nhóm này có đặc điểm gì, dữ liệu được hình thành ra sao,
+                và cần thêm thông tin nào để hiểu đầy đủ hơn?
+            </p>
+
+        </div>
+
+
+        <div class="timeline-item">
+
+            <div class="timeline-step">
+                Bài học thống kê
+            </div>
+
+            <h3>
+                Dữ liệu có thể báo hiệu rằng
+                “có điều gì đó cần được tìm hiểu”
+            </h3>
+
+            <p>
+                Nhưng thống kê không cho phép chúng ta
+                nhảy ngay từ một con số khác thường
+                đến một kết luận về nguyên nhân.
+                Đây là nguyên tắc rất quan trọng
+                của tư duy dựa trên dữ liệu.
+            </p>
+
+        </div>
+
+    </div>
+
+
+    <div class="warning-box">
+
+        <h3>
+            ⚠️ Một lưu ý quan trọng
+        </h3>
+
+        <p>
+            Trong bài học này,
+            câu chuyện Tuyên Quang được sử dụng
+            như một <strong>tình huống học tập về dữ liệu</strong>.
+        </p>
+
+        <p>
+            Chúng ta quan tâm tới câu hỏi:
+            <strong>
+                “Điều gì trong dữ liệu khiến người quan sát
+                phải đặt câu hỏi?”
+            </strong>
+        </p>
+
+        <p>
+            Mục tiêu ở đây chỉ là quan sát, so sánh và đặt câu hỏi từ dữ liệu;
+            không dùng một vài con số riêng lẻ để giải thích nguyên nhân.
+        </p>
+
+    </div>
+
+</section>
+
+
+<!-- =========================================================
+     03. NHÌN VÀO DỮ LIỆU
+========================================================= -->
+<section id="data">
+
+    <div class="section-label">
+        03 — Những con số
+    </div>
+
+    <h2 class="section-title">
+        Hãy tạm thời chỉ nhìn vào dữ liệu
+    </h2>
+
+    <p class="section-intro">
+        Chưa cần hỏi nguyên nhân.
+        Chưa cần tính thêm đại lượng nào.
+        Chúng ta chỉ quan sát những gì
+        đang xuất hiện trước mắt.
+    </p>
+
+
+    <div class="data-grid">
+
+        <div class="data-card">
+
+            <div class="data-icon">
+                👥
+            </div>
+
+            <div class="data-value">
+                328
+            </div>
+
+            <div class="data-label">
+                thí sinh trong nhóm được quan sát
+            </div>
+
+        </div>
+
+
+        <div class="data-card">
+
+            <div class="data-icon">
+                🚀
+            </div>
+
+            <div class="data-value">
+                299
+            </div>
+
+            <div class="data-label">
+                thí sinh đạt từ 9 điểm
+                Toán trở lên
+            </div>
+
+        </div>
+
+
+        <div class="data-card">
+
+            <div class="data-icon">
+                🏆
+            </div>
+
+            <div class="data-value">
+                147
+            </div>
+
+            <div class="data-label">
+                bài thi đạt điểm 10
+            </div>
+
+        </div>
+
+
+        <div class="data-card">
+
+            <div class="data-icon">
+                📈
+            </div>
+
+            <div class="data-value">
+                9,58
+            </div>
+
+            <div class="data-label">
+                mức điểm trung bình
+                được công bố của nhóm
+            </div>
+
+        </div>
+
+    </div>
+
+
+    <div class="big-question">
+
+        <div class="icon">
+            👀
+        </div>
+
+        <h3>
+            Bạn thấy điều gì?
+        </h3>
+
+        <p>
+            Đừng vội giải thích.
+            Chỉ mô tả điều mà các con số
+            đang khiến bạn chú ý.
+        </p>
+
+    </div>
+
+
+    <div class="compare">
+
+        <div class="compare-card compare-left">
+
+            <div class="data-label">
+                Mức điểm trung bình môn Toán
+                của toàn tỉnh Tuyên Quang
+            </div>
+
+            <div class="compare-number">
+                5,07
+            </div>
+
+            <p>
+                khoảng 5 điểm
+            </p>
+
+        </div>
+
+
+        <div class="vs">
+            VS
+        </div>
+
+
+        <div class="compare-card compare-right">
+
+            <div class="data-label">
+                Mức điểm trung bình
+                của nhóm thí sinh trên
+            </div>
+
+            <div class="compare-number">
+                9,58
+            </div>
+
+            <p>
+                gần mức điểm tuyệt đối
+            </p>
+
+        </div>
+
+    </div>
+
+
+    <div class="think-box">
+
+        <strong>
+            Một nguyên tắc quan trọng bắt đầu xuất hiện:
+        </strong>
+
+        <p>
+            Một con số đứng riêng lẻ
+            thường không nói được nhiều.
+            Khi được đặt cạnh một dữ liệu khác,
+            đặt trong thời gian,
+            địa điểm và bối cảnh cụ thể,
+            ý nghĩa của nó có thể thay đổi hoàn toàn.
+        </p>
+
+    </div>
+
+</section>
+
+
+<!-- =========================================================
+     HOẠT ĐỘNG 1
+========================================================= -->
+<section>
+
+    <div class="section-label">
+        Hoạt động trên lớp
+    </div>
+
+    <h2 class="section-title">
+        Điều gì khiến bạn thấy “lạ”?
+    </h2>
+
+    <p class="section-intro">
+        Nếu là người đầu tiên nhìn thấy bộ dữ liệu này,
+        bạn sẽ chú ý nhất đến điều gì?
+    </p>
+
+
+    <div class="questions">
+
+
+        <div class="question-card">
+
+            <div class="question-no">
+                Quan sát 01
+            </div>
+
+            <h3>
+                Rất nhiều điểm 9–10
+            </h3>
+
+            <p>
+                Không chỉ có một vài học sinh đạt điểm cao,
+                mà điểm rất cao xuất hiện
+                với số lượng lớn trong cùng một nhóm.
+            </p>
+
+        </div>
+
+
+        <div class="question-card">
+
+            <div class="question-no">
+                Quan sát 02
+            </div>
+
+            <h3>
+                Nhiều điểm tuyệt đối
+            </h3>
+
+            <p>
+                147 bài thi đạt điểm 10
+                trong một nhóm chỉ có 328 thí sinh
+                là một đặc điểm rất dễ thu hút chú ý.
+            </p>
+
+        </div>
+
+
+        <div class="question-card">
+
+            <div class="question-no">
+                Quan sát 03
+            </div>
+
+            <h3>
+                Khác biệt với bối cảnh chung
+            </h3>
+
+            <p>
+                Kết quả của nhóm này
+                rất khác so với kết quả môn Toán
+                ở quy mô toàn tỉnh.
+            </p>
+
+        </div>
+
+
+        <div class="question-card">
+
+            <div class="question-no">
+                Quan sát 04
+            </div>
+
+            <h3>
+                Cần thêm dữ liệu
+            </h3>
+
+            <p>
+                Chỉ nhìn những con số trên
+                vẫn chưa đủ để giải thích
+                vì sao sự khác biệt đó xuất hiện.
+            </p>
+
+        </div>
+
+    </div>
+
+</section>
+
+
+<!-- =========================================================
+     CÂU HỎI TRUNG TÂM
+========================================================= -->
+<section>
+
+    <div class="message">
+
+        <h3>
+            Dữ liệu đang làm một việc rất quan trọng:
+            khiến chúng ta đặt câu hỏi.
+        </h3>
+
+        <p>
+            Tại sao lại xuất hiện sự khác biệt lớn như vậy?
+        </p>
+
+        <p>
+            Đây là một nhóm học sinh đặc biệt xuất sắc?
+            Có đặc điểm nào của nhóm mà chúng ta chưa biết?
+            Cấu trúc của nhóm thí sinh có gì đặc biệt?
+            Dữ liệu ở những nhóm khác hoặc những năm khác như thế nào?
+            Còn thông tin nào cần bổ sung để hiểu rõ hơn?
+        </p>
+
+        <p>
+            <strong>
+                Chúng ta chưa biết.
+            </strong>
+            Và chính vì chưa biết,
+            chúng ta cần dữ liệu,
+            phương pháp và tư duy thống kê.
+        </p>
+
+    </div>
+
+</section>
+
+
+<!-- =========================================================
+     04. THỐNG KÊ LÀ GÌ?
+========================================================= -->
+<section id="what-is-statistics">
+
+    <div class="section-label">
+        04 — Từ câu chuyện đến môn học
+    </div>
+
+    <h2 class="section-title">
+        Vậy thống kê là gì?
+    </h2>
+
+    <p class="section-intro">
+        Thống kê không chỉ là tính toán.
+        Nó là một phương pháp có hệ thống
+        để làm việc với dữ liệu
+        và biến dữ liệu thành thông tin hữu ích.
+    </p>
+
+
+    <div class="definition-box">
+
+        <span class="definition-tag">
+            Khái niệm
+        </span>
+
+        <h3>
+            Thống kê
+        </h3>
+
+        <p>
+            <strong>Thống kê</strong>
+            là khoa học về
+            <strong>
+                thu thập, tổ chức, trình bày,
+                phân tích và diễn giải dữ liệu
+            </strong>,
+            nhằm giúp chúng ta
+            <strong>
+                hiểu hiện tượng
+                và hỗ trợ ra quyết định
+            </strong>.
+        </p>
+
+    </div>
+
+
+    <div class="stats-process">
+
+        <div class="process-item">
+
+            <div class="process-icon">
+                📥
+            </div>
+
+            <h4>
+                Thu thập
+            </h4>
+
+            <p>
+                Dữ liệu đến từ đâu?
+            </p>
+
+        </div>
+
+
+        <div class="process-item">
+
+            <div class="process-icon">
+                🗂️
+            </div>
+
+            <h4>
+                Tổ chức
+            </h4>
+
+            <p>
+                Sắp xếp dữ liệu
+                để dễ quan sát.
+            </p>
+
+        </div>
+
+
+        <div class="process-item">
+
+            <div class="process-icon">
+                📊
+            </div>
+
+            <h4>
+                Trình bày
+            </h4>
+
+            <p>
+                Dùng bảng, biểu đồ
+                và hình thức phù hợp.
+            </p>
+
+        </div>
+
+
+        <div class="process-item">
+
+            <div class="process-icon">
+                🔎
+            </div>
+
+            <h4>
+                Phân tích
+            </h4>
+
+            <p>
+                Tìm đặc điểm,
+                xu hướng và mối liên hệ.
+            </p>
+
+        </div>
+
+
+        <div class="process-item">
+
+            <div class="process-icon">
+                💡
+            </div>
+
+            <h4>
+                Diễn giải
+            </h4>
+
+            <p>
+                Dữ liệu có ý nghĩa gì
+                trong thực tế?
+            </p>
+
+        </div>
+
+    </div>
+
+
+    <div class="big-question">
+
+        <div class="icon">
+            💬
+        </div>
+
+        <h3>
+            Không chỉ hỏi:
+            “Tính được bao nhiêu?”
+        </h3>
+
+        <p>
+            Thống kê còn hỏi:
+            <strong>
+                “Con số đó có ý nghĩa gì?”
+            </strong>
+            và
+            <strong>
+                “Ta có thể kết luận đến đâu?”
+            </strong>
+        </p>
+
+    </div>
+
+</section>
+
+
+<!-- =========================================================
+     05. KHÁI NIỆM CƠ BẢN
+========================================================= -->
+<section id="concepts">
+
+    <div class="section-label">
+        05 — Ngôn ngữ của thống kê
+    </div>
+
+    <h2 class="section-title">
+        Một số khái niệm cơ bản
+    </h2>
+
+    <p class="section-intro">
+        Trước khi học các phương pháp thống kê,
+        chúng ta cần thống nhất một số khái niệm
+        sẽ được sử dụng xuyên suốt môn học.
+    </p>
+
+
+    <div class="concept-grid">
+
+
+        <!-- DATA -->
+        <div class="concept-card">
+
+            <div class="concept-number">
+                01
+            </div>
+
+            <div class="concept-icon">
+                🔢
+            </div>
+
+            <h3>
+                Dữ liệu
+            </h3>
+
+            <p>
+                Dữ liệu là những thông tin
+                thu được từ quan sát,
+                đo lường, khảo sát,
+                thí nghiệm hoặc hệ thống ghi nhận.
+            </p>
+
+            <div class="concept-example">
+                Ví dụ:
+                điểm thi, chiều cao,
+                doanh thu, ngành học,
+                mức độ hài lòng...
+            </div>
+
+        </div>
+
+
+        <!-- POPULATION -->
+        <div class="concept-card">
+
+            <div class="concept-number">
+                02
+            </div>
+
+            <div class="concept-icon">
+                🌏
+            </div>
+
+            <h3>
+                Tổng thể
+            </h3>
+
+            <p>
+                <strong>Tổng thể</strong>
+                là toàn bộ các đối tượng
+                mà chúng ta thực sự quan tâm
+                trong một nghiên cứu.
+            </p>
+
+            <div class="concept-example">
+                Ví dụ:
+                toàn bộ sinh viên
+                của một trường đại học.
+            </div>
+
+        </div>
+
+
+        <!-- SAMPLE -->
+        <div class="concept-card">
+
+            <div class="concept-number">
+                03
+            </div>
+
+            <div class="concept-icon">
+                👥
+            </div>
+
+            <h3>
+                Mẫu
+            </h3>
+
+            <p>
+                <strong>Mẫu</strong>
+                là một bộ phận của tổng thể
+                được lựa chọn để quan sát,
+                khảo sát hoặc nghiên cứu.
+            </p>
+
+            <div class="concept-example">
+                Ví dụ:
+                300 sinh viên được chọn
+                để thực hiện khảo sát.
+            </div>
+
+        </div>
+
+
+        <!-- OBSERVATION UNIT -->
+        <div class="concept-card">
+
+            <div class="concept-number">
+                04
+            </div>
+
+            <div class="concept-icon">
+                👤
+            </div>
+
+            <h3>
+                Đơn vị quan sát
+            </h3>
+
+            <p>
+                Là từng đối tượng cụ thể
+                mà chúng ta thu thập thông tin
+                trong nghiên cứu.
+            </p>
+
+            <div class="concept-example">
+                Nếu nghiên cứu điểm thi,
+                mỗi thí sinh có thể là
+                một đơn vị quan sát.
+            </div>
+
+        </div>
+
+
+        <!-- VARIABLE -->
+        <div class="concept-card">
+
+            <div class="concept-number">
+                05
+            </div>
+
+            <div class="concept-icon">
+                🏷️
+            </div>
+
+            <h3>
+                Biến
+            </h3>
+
+            <p>
+                <strong>Biến</strong>
+                là một đặc điểm được quan sát
+                hoặc đo lường trên các đơn vị
+                của nghiên cứu.
+            </p>
+
+            <div class="concept-example">
+                Ví dụ:
+                điểm Toán, tuổi,
+                giới tính, thu nhập,
+                ngành học...
+            </div>
+
+        </div>
+
+
+        <!-- OBSERVATION -->
+        <div class="concept-card">
+
+            <div class="concept-number">
+                06
+            </div>
+
+            <div class="concept-icon">
+                📌
+            </div>
+
+            <h3>
+                Quan sát
+            </h3>
+
+            <p>
+                Là giá trị hoặc tập hợp giá trị
+                ghi nhận được từ một đơn vị
+                trong nghiên cứu.
+            </p>
+
+            <div class="concept-example">
+                Ví dụ:
+                Thí sinh A —
+                điểm Toán 9,25.
+            </div>
+
+        </div>
+
+    </div>
+
+</section>
+
+
+<!-- =========================================================
+     LIÊN HỆ TÌNH HUỐNG TUYÊN QUANG
+========================================================= -->
+<section>
+
+    <div class="section-label">
+        Liên hệ tình huống
+    </div>
+
+    <h2 class="section-title">
+        Thử dùng ngôn ngữ thống kê
+        để mô tả câu chuyện ban đầu
+    </h2>
+
+
+    <div class="questions">
+
+
+        <div class="question-card">
+
+            <div class="question-no">
+                Đơn vị quan sát
+            </div>
+
+            <h3>
+                Một thí sinh
+            </h3>
+
+            <p>
+                Nếu dữ liệu được tổ chức
+                theo từng người dự thi,
+                mỗi thí sinh là một
+                đơn vị quan sát.
+            </p>
+
+        </div>
+
+
+        <div class="question-card">
+
+            <div class="question-no">
+                Biến quan tâm
+            </div>
+
+            <h3>
+                Điểm môn Toán
+            </h3>
+
+            <p>
+                Đây là một đặc điểm
+                được ghi nhận trên
+                từng thí sinh.
+            </p>
+
+        </div>
+
+
+        <div class="question-card">
+
+            <div class="question-no">
+                Dữ liệu
+            </div>
+
+            <h3>
+                Các điểm thi được ghi nhận
+            </h3>
+
+            <p>
+                Tập hợp các giá trị điểm
+                tạo thành dữ liệu
+                mà chúng ta muốn nghiên cứu.
+            </p>
+
+        </div>
+
+
+        <div class="question-card">
+
+            <div class="question-no">
+                Bối cảnh
+            </div>
+
+            <h3>
+                Điểm thi, tỉnh, môn học, năm thi
+            </h3>
+
+            <p>
+                Một giá trị thống kê
+                chỉ thực sự có ý nghĩa
+                khi biết nó thuộc bối cảnh nào.
+            </p>
+
+        </div>
+
+    </div>
+
+</section>
+
+
+<!-- =========================================================
+     TỔNG THỂ VÀ MẪU
+========================================================= -->
+<section>
+
+    <div class="section-label">
+        Một quan hệ quan trọng
+    </div>
+
+    <h2 class="section-title">
+        Từ tổng thể đến mẫu
+    </h2>
+
+    <p class="section-intro">
+        Trong nhiều nghiên cứu,
+        chúng ta không thể hoặc không cần
+        quan sát toàn bộ các đối tượng.
+        Vì vậy, một phần của tổng thể
+        thường được chọn để nghiên cứu.
+    </p>
+
+
+    <div class="population-wrap">
+
+        <div class="population-card">
+
+            <h3>
+                🌎 Tổng thể
+            </h3>
+
+            <p>
+                Toàn bộ đối tượng
+                mà nghiên cứu muốn tìm hiểu.
+            </p>
+
+            <div class="dot-cloud">
+
+                <span class="person-dot"></span>
+                <span class="person-dot"></span>
+                <span class="person-dot"></span>
+                <span class="person-dot"></span>
+                <span class="person-dot"></span>
+
+                <span class="person-dot"></span>
+                <span class="person-dot"></span>
+                <span class="person-dot"></span>
+                <span class="person-dot"></span>
+                <span class="person-dot"></span>
+
+                <span class="person-dot"></span>
+                <span class="person-dot"></span>
+                <span class="person-dot"></span>
+                <span class="person-dot"></span>
+                <span class="person-dot"></span>
+
+                <span class="person-dot"></span>
+                <span class="person-dot"></span>
+                <span class="person-dot"></span>
+                <span class="person-dot"></span>
+                <span class="person-dot"></span>
+
+                <span class="person-dot"></span>
+                <span class="person-dot"></span>
+                <span class="person-dot"></span>
+                <span class="person-dot"></span>
+                <span class="person-dot"></span>
+
+                <span class="person-dot"></span>
+                <span class="person-dot"></span>
+                <span class="person-dot"></span>
+                <span class="person-dot"></span>
+                <span class="person-dot"></span>
+
+            </div>
+
+        </div>
+
+
+        <div class="arrow-circle">
+            →
+        </div>
+
+
+        <div class="population-card">
+
+            <h3>
+                👥 Mẫu
+            </h3>
+
+            <p>
+                Một phần của tổng thể
+                được lựa chọn để nghiên cứu.
+            </p>
+
+            <div class="dot-cloud">
+
+                <span class="person-dot sample"></span>
+                <span class="person-dot sample"></span>
+                <span class="person-dot sample"></span>
+                <span class="person-dot sample"></span>
+                <span class="person-dot sample"></span>
+
+                <span class="person-dot sample"></span>
+                <span class="person-dot sample"></span>
+                <span class="person-dot sample"></span>
+
+            </div>
+
+        </div>
+
+    </div>
+
+
+    <div class="think-box">
+
+        <strong>
+            Câu hỏi rất quan trọng của môn học:
+        </strong>
+
+        <p>
+            Nếu chúng ta chỉ quan sát một phần,
+            làm thế nào sử dụng những gì thấy được
+            từ mẫu để hiểu một tổng thể rộng hơn?
+        </p>
+
+    </div>
+
+</section>
+
+
+<!-- =========================================================
+     MINI QUIZ
+========================================================= -->
+<section>
+
+    <div class="section-label">
+        Thử nhanh
+    </div>
+
+    <h2 class="section-title">
+        Bạn đã phân biệt được tổng thể và mẫu?
+    </h2>
+
+
+    <div class="mini-quiz">
+
+        <h3>
+            Một trường đại học có 8.000 sinh viên.
+            Nhà trường chọn 400 sinh viên
+            để khảo sát mức độ hài lòng
+            đối với thư viện.
+        </h3>
+
+        <p>
+            Trong nghiên cứu này,
+            <strong>400 sinh viên được chọn</strong>
+            là gì?
+        </p>
+
+        <div class="quiz-options">
+
+            <button
+                class="quiz-option"
+                onclick="checkQuiz(this,false)"
+            >
+                A. Tổng thể
+            </button>
+
+            <button
+                class="quiz-option"
+                onclick="checkQuiz(this,true)"
+            >
+                B. Mẫu
+            </button>
+
+            <button
+                class="quiz-option"
+                onclick="checkQuiz(this,false)"
+            >
+                C. Biến
+            </button>
+
+            <button
+                class="quiz-option"
+                onclick="checkQuiz(this,false)"
+            >
+                D. Đơn vị đo
+            </button>
+
+        </div>
+
+        <div
+            class="quiz-feedback"
+            id="quizFeedback"
+        ></div>
+
+    </div>
+
+</section>
+
+
+<!-- =========================================================
+     06. HAI HƯỚNG
+========================================================= -->
+<section id="branches">
+
+    <div class="section-label">
+        06 — Hai hướng chính
+    </div>
+
+    <h2 class="section-title">
+        Thống kê giúp chúng ta làm gì
+        với dữ liệu?
+    </h2>
+
+
+    <div class="branch-grid">
+
+
+        <div class="branch-card descriptive">
+
+            <div class="branch-icon">
+                📊
+            </div>
+
+            <h3>
+                Thống kê mô tả
+            </h3>
+
+            <p>
+                Giúp chúng ta
+                <strong>
+                    tổ chức, trình bày
+                    và mô tả dữ liệu
+                </strong>
+                mà mình đang có.
+            </p>
+
+            <p>
+                Ví dụ:
+                lập bảng,
+                vẽ biểu đồ,
+                nhận diện xu hướng,
+                so sánh các nhóm
+                hoặc phát hiện những đặc điểm nổi bật.
+            </p>
+
+        </div>
+
+
+        <div class="branch-card inferential">
+
+            <div class="branch-icon">
+                🔭
+            </div>
+
+            <h3>
+                Thống kê suy luận
+            </h3>
+
+            <p>
+                Sử dụng thông tin từ
+                <strong>mẫu</strong>
+                để hỗ trợ nhận định,
+                dự đoán hoặc đưa ra kết luận
+                về một <strong>tổng thể</strong>
+                rộng hơn.
+            </p>
+
+            <p>
+                Đây là lúc chúng ta
+                phải làm việc với
+                sự không chắc chắn.
+            </p>
+
+        </div>
+
+    </div>
+
+
+    <div class="big-question">
+
+        <div class="icon">
+            🎯
+        </div>
+
+        <h3>
+            Mô tả điều ta nhìn thấy.
+            Suy luận về điều ta chưa nhìn thấy.
+        </h3>
+
+        <p>
+            Đây là hai nhiệm vụ rất lớn
+            của thống kê.
+        </p>
+
+    </div>
+
+</section>
+
+
+<!-- =========================================================
+     07. Ý NGHĨA
+========================================================= -->
+<section id="meaning">
+
+    <div class="section-label">
+        07 — Ý nghĩa
+    </div>
+
+    <h2 class="section-title">
+        Vì sao chúng ta cần học thống kê?
+    </h2>
+
+    <p class="section-intro">
+        Trong một thế giới ngày càng nhiều dữ liệu,
+        khả năng đọc, hiểu và đánh giá dữ liệu
+        trở thành một năng lực thiết yếu.
+    </p>
+
+
+    <div class="role-grid">
+
+
+        <div class="role-card">
+
+            <div class="role-icon">
+                👀
+            </div>
+
+            <h3>
+                Hiểu hiện tượng
+            </h3>
+
+            <p>
+                Thống kê giúp nhìn thấy
+                xu hướng, đặc điểm
+                và những điều đáng chú ý
+                trong dữ liệu.
+            </p>
+
+        </div>
+
+
+        <div class="role-card">
+
+            <div class="role-icon">
+                🚨
+            </div>
+
+            <h3>
+                Phát hiện bất thường
+            </h3>
+
+            <p>
+                Những thay đổi khác thường
+                có thể là tín hiệu
+                cho thấy một vấn đề
+                cần được kiểm tra.
+            </p>
+
+        </div>
+
+
+        <div class="role-card">
+
+            <div class="role-icon">
+                🧭
+            </div>
+
+            <h3>
+                Hỗ trợ quyết định
+            </h3>
+
+            <p>
+                Quyết định dựa trên bằng chứng
+                thường tốt hơn quyết định
+                chỉ dựa vào cảm giác.
+            </p>
+
+        </div>
+
+
+        <div class="role-card">
+
+            <div class="role-icon">
+                🔮
+            </div>
+
+            <h3>
+                Dự báo
+            </h3>
+
+            <p>
+                Dữ liệu trong quá khứ
+                và hiện tại có thể hỗ trợ
+                dự đoán những gì
+                có thể xảy ra tiếp theo.
+            </p>
+
+        </div>
+
+    </div>
+
+
+    <div class="role-grid">
+
+
+        <div class="role-card">
+
+            <div class="role-icon">
+                🏭
+            </div>
+
+            <h3>
+                Sản xuất
+            </h3>
+
+            <p>
+                Theo dõi chất lượng,
+                phát hiện sản phẩm lỗi
+                và cải tiến quy trình.
+            </p>
+
+        </div>
+
+
+        <div class="role-card">
+
+            <div class="role-icon">
+                💼
+            </div>
+
+            <h3>
+                Kinh doanh
+            </h3>
+
+            <p>
+                Phân tích khách hàng,
+                doanh thu, thị trường
+                và hiệu quả hoạt động.
+            </p>
+
+        </div>
+
+
+        <div class="role-card">
+
+            <div class="role-icon">
+                🏥
+            </div>
+
+            <h3>
+                Y tế
+            </h3>
+
+            <p>
+                Theo dõi bệnh tật,
+                đánh giá điều trị
+                và nghiên cứu sức khỏe.
+            </p>
+
+        </div>
+
+
+        <div class="role-card">
+
+            <div class="role-icon">
+                🎓
+            </div>
+
+            <h3>
+                Giáo dục
+            </h3>
+
+            <p>
+                Phân tích kết quả học tập,
+                khảo sát người học
+                và đánh giá hoạt động đào tạo.
+            </p>
+
+        </div>
+
+    </div>
+
+</section>
+
+
+<!-- =========================================================
+     08. TƯ DUY THỐNG KÊ
+========================================================= -->
+<section id="thinking">
+
+    <div class="section-label">
+        08 — Quay lại Tuyên Quang
+    </div>
+
+    <h2 class="section-title">
+        Một kết quả khác thường có đủ để
+        giải thích nguyên nhân?
+    </h2>
+
+    <p class="section-intro">
+        Đây chính là điểm rất quan trọng
+        để phân biệt giữa
+        <strong>phát hiện dấu hiệu</strong>
+        và
+        <strong>kết luận nguyên nhân</strong>.
+    </p>
+
+
+    <div class="vote-grid">
+
+        <button
+            class="vote-btn"
+            onclick="vote(this,'a')"
+        >
+            ❌
+            Có. Chỉ cần thấy dữ liệu khác thường
+            là có thể kết luận ngay
+            về nguyên nhân.
+        </button>
+
+
+        <button
+            class="vote-btn"
+            onclick="vote(this,'b')"
+        >
+            🔍
+            Chưa thể kết luận.
+            Dữ liệu bất thường là tín hiệu
+            để tiếp tục kiểm tra và tìm hiểu.
+        </button>
+
+
+        <button
+            class="vote-btn"
+            onclick="vote(this,'c')"
+        >
+            🤷
+            Không thể nói gì.
+            Dữ liệu không có vai trò
+            trong việc phát hiện vấn đề.
+        </button>
+
+    </div>
+
+
+    <div
+        class="feedback"
+        id="feedback"
+    ></div>
+
+
+    <div class="flow">
+
+        <div class="flow-item">
+
+            <div class="flow-number">
+                1
+            </div>
+
+            <h4>
+                Quan sát
+            </h4>
+
+            <p>
+                Ta đang có
+                dữ liệu gì?
+            </p>
+
+        </div>
+
+
+        <div class="flow-item">
+
+            <div class="flow-number">
+                2
+            </div>
+
+            <h4>
+                Đặt câu hỏi
+            </h4>
+
+            <p>
+                Điều gì
+                đáng chú ý?
+            </p>
+
+        </div>
+
+
+        <div class="flow-item">
+
+            <div class="flow-number">
+                3
+            </div>
+
+            <h4>
+                Đặt vào bối cảnh
+            </h4>
+
+            <p>
+                So với ai,
+                ở đâu, khi nào?
+            </p>
+
+        </div>
+
+
+        <div class="flow-item">
+
+            <div class="flow-number">
+                4
+            </div>
+
+            <h4>
+                Tìm thêm bằng chứng
+            </h4>
+
+            <p>
+                Còn thiếu
+                thông tin nào?
+            </p>
+
+        </div>
+
+
+        <div class="flow-item">
+
+            <div class="flow-number">
+                5
+            </div>
+
+            <h4>
+                Kết luận
+            </h4>
+
+            <p>
+                Chỉ kết luận trong
+                phạm vi bằng chứng cho phép.
+            </p>
+
+        </div>
+
+    </div>
+
+</section>
+
+
+<!-- =========================================================
+     NGUYÊN TẮC
+========================================================= -->
+<section>
+
+    <div class="message">
+
+        <h3>
+            Dữ liệu khác thường
+            ≠
+            kết luận về nguyên nhân
+        </h3>
+
+        <p>
+            Dữ liệu khác thường có thể là
+            <strong>
+                một tín hiệu rất có giá trị
+            </strong>
+            để phát hiện vấn đề.
+        </p>
+
+        <p>
+            Nhưng từ việc
+            <strong>
+                “phát hiện có điều đáng chú ý”
+            </strong>
+            đến việc
+            <strong>
+                “xác định nguyên nhân”
+            </strong>
+            là hai bước hoàn toàn khác nhau.
+        </p>
+
+        <p>
+            Một người biết thống kê
+            không chỉ biết nhận ra điều bất thường,
+            mà còn phải biết
+            <strong>
+                giới hạn của dữ liệu mình đang có.
+            </strong>
+        </p>
+
+    </div>
+
+</section>
+
+
+<!-- =========================================================
+     THỬ LÀM NHÀ PHÂN TÍCH
+========================================================= -->
+<section>
+
+    <div class="section-label">
+        Thử làm nhà phân tích
+    </div>
+
+    <h2 class="section-title">
+        Nếu chỉ có các con số ban đầu,
+        bạn muốn biết thêm điều gì?
+    </h2>
+
+    <p class="section-intro">
+        Đây là hoạt động rất quan trọng:
+        thay vì tranh luận ngay về kết luận,
+        hãy đặt câu hỏi về dữ liệu
+        mà chúng ta còn thiếu.
+    </p>
+
+
+    <div class="questions">
+
+
+        <div class="question-card">
+
+            <div class="question-no">
+                Câu hỏi 01
+            </div>
+
+            <h3>
+                Nhóm thí sinh này là ai?
+            </h3>
+
+            <p>
+                Đây có phải là một nhóm
+                học sinh được tuyển chọn đặc biệt?
+                Thành tích học tập trước đó thế nào?
+            </p>
+
+        </div>
+
+
+        <div class="question-card">
+
+            <div class="question-no">
+                Câu hỏi 02
+            </div>
+
+            <h3>
+                Những năm trước thế nào?
+            </h3>
+
+            <p>
+                Kết quả rất cao này
+                đã từng xuất hiện
+                trong các kỳ thi trước hay chưa?
+            </p>
+
+        </div>
+
+
+        <div class="question-card">
+
+            <div class="question-no">
+                Câu hỏi 03
+            </div>
+
+            <h3>
+                Các trường tương tự thì sao?
+            </h3>
+
+            <p>
+                Nếu so với những nhóm học sinh
+                có điều kiện và năng lực tương tự,
+                kết quả có còn đặc biệt hay không?
+            </p>
+
+        </div>
+
+
+        <div class="question-card">
+
+            <div class="question-no">
+                Câu hỏi 04
+            </div>
+
+            <h3>
+                Các môn khác thế nào?
+            </h3>
+
+            <p>
+                Hiện tượng chỉ xuất hiện
+                ở môn Toán,
+                hay còn xuất hiện
+                ở các môn thi khác?
+            </p>
+
+        </div>
+
+
+        <div class="question-card">
+
+            <div class="question-no">
+                Câu hỏi 05
+            </div>
+
+            <h3>
+                Dữ liệu có đáng tin cậy?
+            </h3>
+
+            <p>
+                Dữ liệu được thu thập,
+                nhập, xử lý và công bố
+                theo quy trình nào?
+            </p>
+
+        </div>
+
+
+        <div class="question-card">
+
+            <div class="question-no">
+                Câu hỏi 06
+            </div>
+
+            <h3>
+                Có cách giải thích nào khác?
+            </h3>
+
+            <p>
+                Trước khi đưa ra kết luận,
+                chúng ta đã xem xét đầy đủ
+                các giả thuyết có thể xảy ra chưa?
+            </p>
+
+        </div>
+
+    </div>
+
+</section>
+
+
+<!-- =========================================================
+     TỪ TÌNH HUỐNG ĐẾN TƯ DUY MÔN HỌC
+========================================================= -->
+<section>
+
+    <div class="section-label">
+        Từ câu chuyện đến môn học
+    </div>
+
+    <h2 class="section-title">
+        Đây chính là tinh thần
+        của Thống kê ứng dụng
+    </h2>
+
+
+    <div class="flow">
+
+        <div class="flow-item">
+
+            <div class="flow-number">
+                1
+            </div>
+
+            <h4>
+                Có một vấn đề
+            </h4>
+
+            <p>
+                Thực tế đặt ra
+                một câu hỏi.
+            </p>
+
+        </div>
+
+
+        <div class="flow-item">
+
+            <div class="flow-number">
+                2
+            </div>
+
+            <h4>
+                Thu thập dữ liệu
+            </h4>
+
+            <p>
+                Không suy đoán
+                chỉ bằng cảm giác.
+            </p>
+
+        </div>
+
+
+        <div class="flow-item">
+
+            <div class="flow-number">
+                3
+            </div>
+
+            <h4>
+                Tổ chức dữ liệu
+            </h4>
+
+            <p>
+                Biến dữ liệu thô
+                thành dạng dễ hiểu.
+            </p>
+
+        </div>
+
+
+        <div class="flow-item">
+
+            <div class="flow-number">
+                4
+            </div>
+
+            <h4>
+                Phân tích
+            </h4>
+
+            <p>
+                Tìm đặc điểm,
+                mối liên hệ và dấu hiệu.
+            </p>
+
+        </div>
+
+
+        <div class="flow-item">
+
+            <div class="flow-number">
+                5
+            </div>
+
+            <h4>
+                Ra quyết định
+            </h4>
+
+            <p>
+                Dựa trên bằng chứng
+                chứ không chỉ trực giác.
+            </p>
+
+        </div>
+
+    </div>
+
+</section>
+
+
+<!-- =========================================================
+     09. CHỐT BÀI
+========================================================= -->
+<section id="conclusion">
+
+    <div class="section-label">
+        09 — Chốt bài
+    </div>
+
+    <h2 class="section-title">
+        Hôm nay chúng ta chưa học
+        một công thức thống kê nào
+    </h2>
+
+    <p class="section-intro">
+        Nhưng chúng ta đã bắt đầu
+        hình thành cách nhìn
+        của một người làm việc với dữ liệu.
+    </p>
+
+
+    <div
+        class="card"
+        style="margin-top:28px;"
+    >
+
+        <h3>
+            Những ý cần nhớ
+        </h3>
+
+
+        <p>
+            <strong>① Thống kê</strong>
+            là khoa học về thu thập,
+            tổ chức, trình bày,
+            phân tích và diễn giải dữ liệu.
+        </p>
+
+
+        <p>
+            <strong>② Dữ liệu</strong>
+            không tự nói lên tất cả.
+            Nó cần được đặt
+            trong một bối cảnh cụ thể.
+        </p>
+
+
+        <p>
+            <strong>③ Tổng thể</strong>
+            là toàn bộ đối tượng quan tâm,
+            còn <strong>mẫu</strong>
+            là một phần của tổng thể
+            được lựa chọn để nghiên cứu.
+        </p>
+
+
+        <p>
+            <strong>④ Đơn vị quan sát</strong>
+            là từng đối tượng được ghi nhận,
+            còn <strong>biến</strong>
+            là đặc điểm được quan sát
+            hoặc đo lường trên đối tượng đó.
+        </p>
+
+
+        <p>
+            <strong>⑤ Thống kê mô tả</strong>
+            giúp chúng ta mô tả
+            những dữ liệu đang có.
+        </p>
+
+
+        <p>
+            <strong>⑥ Thống kê suy luận</strong>
+            giúp sử dụng thông tin từ mẫu
+            để hỗ trợ tìm hiểu
+            một tổng thể rộng hơn.
+        </p>
+
+
+        <p>
+            <strong>⑦</strong>
+            Một dữ liệu bất thường
+            có thể là một
+            <strong>tín hiệu quan trọng</strong>,
+            nhưng chưa phải là
+            một lời giải thích nguyên nhân.
+        </p>
+
+
+        <p>
+            <strong>⑧</strong>
+            Người làm thống kê tốt
+            không chỉ biết tính toán,
+            mà còn phải biết
+            <strong>đặt đúng câu hỏi</strong>.
+        </p>
+
+    </div>
+
+
+    <div class="big-question">
+
+        <div class="icon">
+            📦
+        </div>
+
+        <h3>
+            Nhưng nếu trước mặt chúng ta
+            có hàng trăm hoặc hàng nghìn
+            giá trị dữ liệu thì sao?
+        </h3>
+
+        <p>
+            Làm thế nào để nhìn vào
+            một tập dữ liệu lớn
+            và nhanh chóng nhận ra
+            những đặc điểm quan trọng của nó?
+        </p>
+
+    </div>
+
+
+    <div
+        class="next-lesson"
+        style="margin-top:28px;"
+    >
+
+        <div class="next-icon">
+            →
+        </div>
+
+        <div>
+
+            <small
+                style="
+                    color:var(--purple);
+                    font-weight:900;
+                    letter-spacing:.06em;
+                "
+            >
+                BÀI TIẾP THEO
+            </small>
+
+            <h3 style="margin:5px 0;">
+                Làm thế nào để mô tả một mẫu dữ liệu?
+            </h3>
+
+            <p
+                style="
+                    margin:0;
+                    color:var(--text-soft);
+                "
+            >
+                Ở bài tiếp theo,
+                chúng ta sẽ bắt đầu tìm hiểu
+                những công cụ giúp tóm tắt,
+                mô tả và nhìn thấy
+                đặc điểm của một tập dữ liệu.
+            </p>
+
+        </div>
+
+    </div>
+
+</section>
+
+</main>
+
+
+<!-- =========================================================
+     FOOTER
+========================================================= -->
+<footer>
+
+    <strong>
+        THỐNG KÊ ỨNG DỤNG
+    </strong>
+
+    <br>
+
+    Giảng viên:
+    <strong>
+        Nguyễn Đức Ánh
+    </strong>
+
+    <br><br>
+
+    <span style="font-size:13px;">
+        Bài mở đầu —
+        Dữ liệu, thống kê
+        và những câu hỏi đầu tiên
+    </span>
+
+</footer>
+
+
+<!-- =========================================================
+     TOP BUTTON
+========================================================= -->
+<button
+    id="topBtn"
+    onclick="
+        window.scrollTo({
+            top:0,
+            behavior:'smooth'
+        })
+    "
+    aria-label="Lên đầu trang"
+>
+    ↑
+</button>
+
+
+<script>
+
+/* =========================================================
+   1. THEME
+========================================================= */
+
+const THEME_KEY =
+    "thong_ke_ung_dung_bai_mo_dau_theme";
+
+
+function applyTheme(theme){
+
+    const body =
+        document.body;
+
+    const icon =
+        document.getElementById(
+            "themeIcon"
+        );
+
+    const text =
+        document.getElementById(
+            "themeText"
+        );
+
+
+    if(theme === "dark"){
+
+        body.classList.add(
+            "dark"
+        );
+
+        icon.textContent =
+            "☀️";
+
+        text.textContent =
+            "Nền sáng";
+
+    }else{
+
+        body.classList.remove(
+            "dark"
+        );
+
+        icon.textContent =
+            "🌙";
+
+        text.textContent =
+            "Nền tối";
+    }
+}
+
+
+function toggleTheme(){
+
+    const isDark =
+        document.body
+        .classList
+        .contains("dark");
+
+    const newTheme =
+        isDark
+        ? "light"
+        : "dark";
+
+    localStorage.setItem(
+        THEME_KEY,
+        newTheme
+    );
+
+    applyTheme(
+        newTheme
+    );
+}
+
+
+/* =========================================================
+   2. KHỞI TẠO THEME
+========================================================= */
+
+(function(){
+
+    const saved =
+        localStorage.getItem(
+            THEME_KEY
+        );
+
+    if(saved){
+
+        applyTheme(saved);
+
+        return;
+    }
+
+
+    const systemDark =
+        window.matchMedia &&
+        window.matchMedia(
+            "(prefers-color-scheme: dark)"
+        ).matches;
+
+
+    applyTheme(
+        systemDark
+        ? "dark"
+        : "light"
+    );
+
+})();
+
+
+/* =========================================================
+   3. PROGRESS BAR + TOP BUTTON
+========================================================= */
+
+window.addEventListener(
+    "scroll",
+    function(){
+
+        const doc =
+            document.documentElement;
+
+        const scrollTop =
+            doc.scrollTop ||
+            document.body.scrollTop;
+
+        const scrollHeight =
+            doc.scrollHeight -
+            doc.clientHeight;
+
+        const progress =
+            scrollHeight > 0
+            ? (
+                scrollTop /
+                scrollHeight
+              ) * 100
+            : 0;
+
+
+        document
+            .getElementById(
+                "progressBar"
+            )
+            .style.width =
+            progress + "%";
+
+
+        const topBtn =
+            document.getElementById(
+                "topBtn"
+            );
+
+
+        if(scrollTop > 500){
+
+            topBtn.classList.add(
+                "show"
+            );
+
+        }else{
+
+            topBtn.classList.remove(
+                "show"
+            );
+        }
+
+    }
+);
+
+
+/* =========================================================
+   4. HOẠT ĐỘNG: DỮ LIỆU BẤT THƯỜNG
+========================================================= */
+
+function vote(
+    button,
+    answer
+){
+
+    const buttons =
+        document.querySelectorAll(
+            ".vote-btn"
+        );
+
+    buttons.forEach(
+        btn =>
+            btn.classList.remove(
+                "selected"
+            )
+    );
+
+
+    button.classList.add(
+        "selected"
+    );
+
+
+    const feedback =
+        document.getElementById(
+            "feedback"
+        );
+
+
+    feedback.classList.add(
+        "show"
+    );
+
+
+    if(answer === "b"){
+
+        feedback.innerHTML = `
+            <strong>
+                ✓ Đây là cách tiếp cận phù hợp.
+            </strong>
+
+            <br><br>
+
+            Một kết quả khác thường
+            có thể là một tín hiệu rất quan trọng.
+
+            Nhưng tín hiệu chưa phải là
+            lời giải thích nguyên nhân.
+
+            Chúng ta cần tiếp tục
+            kiểm tra dữ liệu,
+            bổ sung thông tin,
+            so sánh các khả năng
+            và tìm thêm bằng chứng.
+        `;
+
+    }else if(answer === "a"){
+
+        feedback.innerHTML = `
+            <strong>
+                Hãy cẩn thận với kết luận này.
+            </strong>
+
+            <br><br>
+
+            Sự khác thường trong dữ liệu
+            có thể tạo ra câu hỏi
+            và gợi ý rằng ta cần thêm thông tin.
+
+            Tuy nhiên,
+            bản thân sự bất thường
+            chưa đủ để chứng minh
+            nguyên nhân của hiện tượng.
+        `;
+
+    }else{
+
+        feedback.innerHTML = `
+            <strong>
+                Dữ liệu vẫn cung cấp
+                thông tin rất quan trọng.
+            </strong>
+
+            <br><br>
+
+            Chính những khác biệt
+            hoặc mô hình bất thường
+            trong dữ liệu
+            có thể giúp chúng ta phát hiện
+            một vấn đề cần được
+            nghiên cứu sâu hơn.
+        `;
+    }
+}
+
+
+/* =========================================================
+   5. MINI QUIZ
+========================================================= */
+
+function checkQuiz(
+    button,
+    correct
+){
+
+    const options =
+        button.parentElement
+        .querySelectorAll(
+            ".quiz-option"
+        );
+
+    options.forEach(
+        item => {
+            item.classList.remove(
+                "correct",
+                "wrong"
+            );
+        }
+    );
+
+
+    const feedback =
+        document.getElementById(
+            "quizFeedback"
+        );
+
+
+    if(correct){
+
+        button.classList.add(
+            "correct"
+        );
+
+        feedback.innerHTML = `
+            ✅ <strong>Đúng.</strong>
+
+            400 sinh viên được lựa chọn
+            từ toàn bộ 8.000 sinh viên
+            để thực hiện khảo sát.
+
+            Vì vậy,
+            400 sinh viên này tạo thành
+            <strong>mẫu</strong>.
+        `;
+
+    }else{
+
+        button.classList.add(
+            "wrong"
+        );
+
+        feedback.innerHTML = `
+            Chưa chính xác.
+
+            Hãy nhớ:
+
+            <strong>Tổng thể</strong>
+            là toàn bộ 8.000 sinh viên,
+
+            còn 400 sinh viên
+            được lựa chọn để khảo sát
+            là <strong>mẫu</strong>.
+        `;
+    }
+}
+
+</script>
+
+</body>
+</html>
